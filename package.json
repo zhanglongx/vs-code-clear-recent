@@ -1,0 +1,86 @@
+{
+  "name": "vs-code-clear-recent",
+  "displayName": "Clear Recent",
+  "description": "Clear matching entries from VS Code's recently opened list without touching files on disk.",
+  "version": "0.1.0",
+  "publisher": "zhlx",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:clearRecent.runNow"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "clearRecent.runNow",
+        "title": "Clear Recent: Run Now"
+      }
+    ],
+    "configuration": {
+      "title": "Clear Recent",
+      "properties": {
+        "clearRecent.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic cleanup for matching recently opened entries."
+        },
+        "clearRecent.rules": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Glob patterns matched against recent file paths, folder paths, workspace paths, or URI strings. Use forward slashes in rules for cross-platform matching."
+        },
+        "clearRecent.runOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run cleanup after VS Code startup finishes."
+        },
+        "clearRecent.runOnShutdown": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run cleanup during extension deactivation as a best-effort shutdown pass."
+        },
+        "clearRecent.debugLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Write detailed cleanup diagnostics to the Clear Recent output channel."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node --test out/test/run.test.js",
+    "test:integration": "node ./out/test/integration/runTest.js",
+    "package:vsix": "vsce package"
+  },
+  "dependencies": {
+    "minimatch": "^10.0.3"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.17.57",
+    "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.6.2",
+    "glob": "^11.0.3",
+    "mocha": "^11.7.4",
+    "typescript": "^5.8.3"
+  }
+}

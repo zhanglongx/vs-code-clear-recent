@@ -1,0 +1,9 @@
+.git/**
+.github/**
+.vscode/**
+src/**
+out/test/**
+tsconfig.json
+package-lock.json
+npm-debug.log*
+*.ts
