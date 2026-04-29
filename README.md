@@ -1,16 +1,16 @@
 # Clear Recent
 
-`Clear Recent` 是一个私有分发的 VS Code 扩展，用于按照配置规则清理 VS Code 的“最近打开”记录。
+`Clear Recent` is a privately distributed VS Code extension that removes entries from VS Code's recently opened list based on configured matching rules.
 
-它只删除 VS Code 内部的 recent 记录，不会删除磁盘上的任何文件、文件夹或 workspace 文件。
+It only removes VS Code's internal recent entries. It does not delete any files, folders, or workspace files from disk.
 
 ## Features
 
-- 在 VS Code 启动完成后自动清理
-- 在扩展停用时做一次 best-effort 清理
-- 提供 `Clear Recent: Run Now` 手动命令便于验证
-- 使用 glob 规则匹配文件、文件夹和 `.code-workspace` recent 项
-- 跨平台支持 Windows、Linux、macOS
+- Automatically runs after VS Code startup finishes
+- Performs a best-effort cleanup when the extension is deactivated
+- Provides a `Clear Recent: Run Now` command for manual verification
+- Uses glob rules to match recent file, folder, and `.code-workspace` entries
+- Works on Windows, Linux, and macOS
 
 ## Configuration
 
@@ -29,13 +29,13 @@
 }
 ```
 
-规则说明：
+Rule notes:
 
-- 统一使用 `/` 作为路径分隔符，便于跨平台配置
-- 文件和文件夹 recent 项按绝对路径匹配
-- workspace recent 项按 `.code-workspace` 文件路径匹配
-- 非 `file:` URI 按完整 URI 字符串匹配
-- Windows 按不区分大小写匹配；Linux/macOS 按区分大小写匹配
+- Always use `/` as the path separator for cross-platform configuration
+- Recent file and folder entries are matched against absolute paths
+- Recent workspace entries are matched against the `.code-workspace` file path
+- Non-`file:` URIs are matched against the full URI string
+- Matching is case-insensitive on Windows and case-sensitive on Linux and macOS
 
 ## Commands
 
@@ -49,10 +49,10 @@ npm run compile
 npm test
 ```
 
-打包私有 VSIX：
+Package a private VSIX:
 
 ```bash
 npm run package:vsix
 ```
 
-然后使用 VS Code 安装生成的 `.vsix` 文件即可。
+Then install the generated `.vsix` file in VS Code.
