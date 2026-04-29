@@ -2,7 +2,7 @@
   "name": "vs-code-clear-recent",
   "displayName": "Clear Recent",
   "description": "Clear matching entries from VS Code's recently opened list without touching files on disk.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "zhlx",
   "private": true,
   "license": "MIT",

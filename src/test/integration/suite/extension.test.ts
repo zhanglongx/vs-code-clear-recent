@@ -12,4 +12,9 @@ describe("Clear Recent extension", () => {
     const commands = await vscode.commands.getCommands(true);
     assert.equal(commands.includes("clearRecent.runNow"), true);
   });
+
+  it("can execute the recently opened read command", async () => {
+    const recent = await vscode.commands.executeCommand<{ files?: unknown[]; workspaces?: unknown[] }>("_workbench.getRecentlyOpened");
+    assert.ok(recent && typeof recent === "object");
+  });
 });

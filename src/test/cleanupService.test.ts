@@ -55,9 +55,6 @@ test("removes only matching entries", async () => {
   const logger = new MemoryLogger();
   const removed: string[] = [];
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       return [createEntry("/workspace/private/a.txt"), createEntry("/workspace/public/b.txt")];
     },
@@ -82,9 +79,6 @@ test("removes only matching entries", async () => {
 test("skips cleanup when no rules are configured", async () => {
   const logger = new MemoryLogger();
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       return [createEntry("/workspace/private/a.txt")];
     },
@@ -108,9 +102,6 @@ test("skips startup cleanup when startup is disabled", async () => {
   const logger = new MemoryLogger();
   let listed = false;
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       listed = true;
       return [];
@@ -136,9 +127,6 @@ test("manual cleanup ignores startup toggle", async () => {
   const logger = new MemoryLogger();
   const removed: string[] = [];
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       return [createEntry("/workspace/private/a.txt")];
     },
@@ -159,16 +147,11 @@ test("manual cleanup ignores startup toggle", async () => {
   assert.deepEqual(removed, ["/workspace/private/a.txt"]);
 });
 
-test("skips cleanup when required commands are unavailable", async () => {
+test("fails cleanup when recent entries cannot be read", async () => {
   const logger = new MemoryLogger();
-  let listed = false;
   const store: RecentStore = {
-    async commandsAvailable() {
-      return false;
-    },
     async listEntries() {
-      listed = true;
-      return [];
+      throw new Error("command missing");
     },
     async removeEntry() {
       throw new Error("should not remove");
@@ -183,17 +166,13 @@ test("skips cleanup when required commands are unavailable", async () => {
 
   const summary = await service.run("startup");
 
-  assert.equal(summary.status, "skipped-unavailable");
-  assert.equal(listed, false);
+  assert.equal(summary.status, "failed");
 });
 
 test("continues when one removal fails", async () => {
   const logger = new MemoryLogger();
   const removed: string[] = [];
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       return [createEntry("/workspace/private/a.txt"), createEntry("/workspace/private/b.txt")];
     },
@@ -225,9 +204,6 @@ test("deduplicates matching entries before removal", async () => {
   const removed: string[] = [];
   const duplicate = createEntry("/workspace/private/a.txt");
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       return [duplicate, { ...duplicate }];
     },
@@ -252,9 +228,6 @@ test("coalesces concurrent runs into a single in-flight execution", async () => 
   const listGate = deferred<RecentEntry[]>();
   let listCalls = 0;
   const store: RecentStore = {
-    async commandsAvailable() {
-      return true;
-    },
     async listEntries() {
       listCalls += 1;
       return listGate.promise;

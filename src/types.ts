@@ -7,7 +7,6 @@ export type CleanupStatus =
   | "skipped-disabled"
   | "skipped-no-rules"
   | "skipped-config"
-  | "skipped-unavailable"
   | "failed";
 
 export interface CleanupConfig {
@@ -41,7 +40,6 @@ export interface CleanupLogger {
 }
 
 export interface RecentStore {
-  commandsAvailable(): Promise<boolean>;
   listEntries(): Promise<RecentEntry[]>;
   removeEntry(entry: RecentEntry): Promise<void>;
 }

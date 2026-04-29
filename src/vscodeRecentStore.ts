@@ -123,24 +123,22 @@ function adaptRawRecents(raw: unknown): RecentEntry[] {
 export class VsCodeRecentStore implements RecentStore {
   public constructor(private readonly logger: CleanupLogger) {}
 
-  public async commandsAvailable(): Promise<boolean> {
-    const commands = await vscode.commands.getCommands(true);
-    const missingCommands = [GET_RECENTS_COMMAND, REMOVE_RECENT_COMMAND].filter((commandId) => !commands.includes(commandId));
-
-    if (missingCommands.length > 0) {
-      this.logger.warn(`Required commands are missing: ${missingCommands.join(", ")}`);
-      return false;
-    }
-
-    return true;
-  }
-
   public async listEntries(): Promise<RecentEntry[]> {
-    const rawRecents = await vscode.commands.executeCommand<unknown>(GET_RECENTS_COMMAND);
-    return adaptRawRecents(rawRecents);
+    try {
+      const rawRecents = await vscode.commands.executeCommand<unknown>(GET_RECENTS_COMMAND);
+      return adaptRawRecents(rawRecents);
+    } catch (error) {
+      this.logger.warn(`Failed to read recently opened entries via ${GET_RECENTS_COMMAND}.`, error);
+      throw new Error(`Unable to read recently opened entries via ${GET_RECENTS_COMMAND}.`);
+    }
   }
 
   public async removeEntry(entry: RecentEntry): Promise<void> {
-    await vscode.commands.executeCommand(REMOVE_RECENT_COMMAND, entry.removeValue);
+    try {
+      await vscode.commands.executeCommand(REMOVE_RECENT_COMMAND, entry.removeValue);
+    } catch (error) {
+      this.logger.warn(`Failed to remove recent entry via ${REMOVE_RECENT_COMMAND}: ${entry.label}`, error);
+      throw new Error(`Unable to remove recent entry: ${entry.label}.`);
+    }
   }
 }

@@ -113,17 +113,6 @@ export class CleanupService {
     }
 
     try {
-      const commandsAvailable = await this.options.store.commandsAvailable();
-      if (!commandsAvailable) {
-        const summary = createSummary(
-          reason,
-          "skipped-unavailable",
-          "cleanup skipped because required VS Code commands are unavailable."
-        );
-        this.options.logger.info(formatSummary(summary));
-        return summary;
-      }
-
       const entries = await this.options.store.listEntries();
       const matchedEntries = dedupeEntries(
         entries.filter((entry) => matchesRecentEntry(entry, config.rules, this.platform))
