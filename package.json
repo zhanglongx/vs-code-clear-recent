@@ -5,6 +5,7 @@
   "version": "0.1.1",
   "publisher": "zhlx",
   "private": true,
+  "icon": "media/icon.png",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
